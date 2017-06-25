@@ -30,7 +30,14 @@ class ViewController: UIViewController {
     
     @IBAction func screenTappedTriggered(sender: AnyObject) {
         print (NSURL (fileURLWithPath: "\(#file)").lastPathComponent!, "\(#function)")
+        
+        healthKitManager.getWorkouts (completion: { (count) in
+            print (NSURL (fileURLWithPath: "\(#file)").lastPathComponent!, "\(#function)")
+            print (count)
+        })
+        
         healthKitManager.getTodayStepCount (completion: { (steps) in
+            print (NSURL (fileURLWithPath: "\(#file)").lastPathComponent!, "\(#function)")
             OperationQueue.main.addOperation {
                 let numberFormatter = NumberFormatter()
                 numberFormatter.maximumFractionDigits = 0
