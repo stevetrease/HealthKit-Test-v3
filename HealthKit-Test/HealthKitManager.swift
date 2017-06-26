@@ -122,6 +122,53 @@ class HealthKitManager {
     }
     
     
+    func getDailySteps (completion:@escaping (Double?)->()) {
+        print (NSURL (fileURLWithPath: "\(#file)").lastPathComponent!, "\(#function)")
+        
+        // longer interval, so less step periods initially
+        var interval = DateComponents()
+        interval.day = 1
+        
+        let anchorDate = cal.date(byAdding: .day, value: -1, to: cal.startOfDay(for: Date()))
+        
+        let type = HKQuantityType.quantityType(forIdentifier: HKQuantityTypeIdentifier.stepCount)
+        
+        // Create the query
+        let query = HKStatisticsCollectionQuery(quantityType: type!,
+                                                quantitySamplePredicate: nil,
+                                                options: .cumulativeSum,
+                                                anchorDate: anchorDate!,
+                                                intervalComponents: interval)
+        
+        // Set the results handler
+        query.initialResultsHandler = {
+            query, results, error in
+            print (NSURL (fileURLWithPath: "\(#file)").lastPathComponent!, "\(#function)")
+            
+            guard let statsCollection = results else {
+                // Perform proper error handling here
+                fatalError("*** An error occurred while calculating the statistics: \(String(describing: error?.localizedDescription)) ***")
+            }
+            
+            let endDate = Date()
+            let startDate = self.cal.date(byAdding: .day, value: -60, to: endDate)
+            
+            statsCollection.enumerateStatistics(from: startDate!, to: endDate) { statistics, stop in
+                if let quantity = statistics.sumQuantity() {
+                    let date = statistics.startDate
+                    let steps = quantity.doubleValue(for: HKUnit.count())
+                    
+                    print (date, steps)
+                    
+                }
+            }
+            completion (0.0)
+        }
+        healthStore.execute(query)
+    }
+    
+    
+    
     private func workoutTypeString (_ type: HKWorkoutActivityType) -> String {
         switch type {
         case HKWorkoutActivityType.walking:
