@@ -9,7 +9,8 @@
 import UIKit
 import HealthKit
 
-class ViewController: UIViewController, UITableViewDataSource {
+
+class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     @IBOutlet var tableView: UITableView!
     
@@ -20,8 +21,7 @@ class ViewController: UIViewController, UITableViewDataSource {
     override func viewDidLoad() {
         super.viewDidLoad()
         print (NSURL (fileURLWithPath: "\(#file)").lastPathComponent!, "\(#function)")
-        
-        // tableView.dataSource = self
+        // NotificationCenter.default.addObserver(self, selector: #selector(refreshObserver), name: NSNotification.Name(rawValue: healthKitDidUpdateNotification1), object: nil)
     }
     
     
@@ -31,52 +31,85 @@ class ViewController: UIViewController, UITableViewDataSource {
     }
     
     
+    @objc func refreshObserver () {
+        print (NSURL (fileURLWithPath: "\(#file)").lastPathComponent!, "\(#function)")
+        DispatchQueue.main.async(execute: {
+            self.tableView.reloadData()
+        })
+    }
+    
+    
     func numberOfSections(in tableView: UITableView) -> Int {
-        return 3
+        return 1
     }
     
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 10
+        print (NSURL (fileURLWithPath: "\(#file)").lastPathComponent!, "\(#function)")
+        print ("*** ", healthKitManager.workoutData.count)
+        return healthKitManager.workoutData.count
     }
     
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cellID")!
         
-        let text = "Cell \(indexPath.row)"
+        let workout = healthKitManager.workoutData[indexPath.row]
+        
+        var text = healthKitManager.workoutTypeString(workout.workoutActivityType)
+        
+        let numberFormatter = NumberFormatter()
+        numberFormatter.numberStyle = NumberFormatter.Style.decimal
+        numberFormatter.maximumFractionDigits = 0
+        text = text + " " + numberFormatter.string(from: workout.duration as NSNumber)!
+        
+        let energyFormatter = EnergyFormatter()
+        let energy = workout.totalEnergyBurned?.doubleValue(for: HKUnit.largeCalorie())
+        text = text + " " + energyFormatter.string(fromJoules: energy!)
+        
+        
+        /*
+         print (workout.startDate, terminator:"\t")
+         print (workout.endDate, terminator:"\t")
+         
+         let numberFormatter = NumberFormatter()
+         numberFormatter.numberStyle = NumberFormatter.Style.decimal
+         numberFormatter.maximumFractionDigits = 0
+         numberFormatter.string(from: workout.duration as NSNumber)!, terminator:"\t")
+         
+         let energyFormatter = EnergyFormatter()
+         let energy = workout.totalEnergyBurned?.doubleValue(for: HKUnit.largeCalorie())
+         print (energyFormatter.string(fromJoules: energy!), terminator:"\t")
+         
+         let distance = workout.totalDistance?.doubleValue(for: HKUnit.mile())
+         numberFormatter.maximumFractionDigits = 1
+         numberFormatter.minimumFractionDigits = 1
+         print (numberFormatter.string(from: distance! as NSNumber)!) */
+       
         cell.textLabel?.text = text
         
         return cell
     }
     
     
-    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String {
+    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         return "Section \(section)"
     }
     
     
     @IBAction func screenTappedTriggered(sender: AnyObject) {
         print (NSURL (fileURLWithPath: "\(#file)").lastPathComponent!, "\(#function)")
-        
-        healthKitManager.getWorkouts (completion: { (count) in
-            print (NSURL (fileURLWithPath: "\(#file)").lastPathComponent!, "\(#function)")
-            print (count)
+        print ("--- ", healthKitManager.workoutData.count)
+        DispatchQueue.main.async(execute: {
+            self.tableView.reloadData()
         })
         
-        healthKitManager.getDailySteps (completion: { (count) in
+        healthKitManager.getWorkouts (completion: { () in
             print (NSURL (fileURLWithPath: "\(#file)").lastPathComponent!, "\(#function)")
-        })
-        
-        healthKitManager.getTodayStepCount (completion: { (steps) in
-            print (NSURL (fileURLWithPath: "\(#file)").lastPathComponent!, "\(#function)")
-            OperationQueue.main.addOperation {
-                let numberFormatter = NumberFormatter()
-                numberFormatter.maximumFractionDigits = 0
-                numberFormatter.numberStyle = NumberFormatter.Style.decimal
-                let number = numberFormatter.string(from: steps! as NSNumber)!
-                print ("\(number) today")
-            }
+            print ("+++ ", healthKitManager.workoutData.count)
+            DispatchQueue.main.async(execute: {
+                self.tableView.reloadData()
+            })
         })
     }
 }
