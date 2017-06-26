@@ -42,7 +42,7 @@ class HealthKitManager {
     
     
     var workoutData: [HKWorkout] = []
-    func getWorkouts (completion:@escaping ()->()) {
+    func getWorkouts (completion:@escaping (Double?)->()) {
         print (NSURL (fileURLWithPath: "\(#file)").lastPathComponent!, "\(#function)")
         
         //   Define the sample type
@@ -70,6 +70,7 @@ class HealthKitManager {
             else {
                 print ("No results were returned, check the error")
             }
+            completion (0.0)
         }
         healthStore.execute(query)
     }

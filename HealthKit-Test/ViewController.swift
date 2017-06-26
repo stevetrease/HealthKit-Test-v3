@@ -104,7 +104,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             self.tableView.reloadData()
         })
         
-        healthKitManager.getWorkouts (completion: { () in
+        healthKitManager.getWorkouts (completion: { (x) in
             print (NSURL (fileURLWithPath: "\(#file)").lastPathComponent!, "\(#function)")
             print ("+++ ", healthKitManager.workoutData.count)
             DispatchQueue.main.async(execute: {
