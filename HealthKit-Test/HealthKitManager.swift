@@ -17,11 +17,9 @@ class HealthDataType {
     var data = 0.0
 }
 
-let healthKitDidUpdateNotification1 = "healthKitDidUpdateNotification1"
-
 
 class HealthKitManager {
-    let historyDays = 7
+    let historyDays = 14
     
     static let sharedInstance = HealthKitManager()
     
@@ -65,7 +63,6 @@ class HealthKitManager {
                         self.workoutData.append(workout)
                     }
                 }
-                NotificationCenter.default.post(name: NSNotification.Name(rawValue: healthKitDidUpdateNotification1), object: nil)
             }
             else {
                 print ("No results were returned, check the error")

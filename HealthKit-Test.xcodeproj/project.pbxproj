@@ -63,8 +63,8 @@
 			children = (
 				AA8C0F541EFE66A5005864BE /* HealthKit-Test.entitlements */,
 				AA8C0F421EFE6625005864BE /* AppDelegate.swift */,
-				AA0E14971EFFDA3A005EF648 /* HealthKitManager.swift */,
 				AA8C0F441EFE6625005864BE /* ViewController.swift */,
+				AA0E14971EFFDA3A005EF648 /* HealthKitManager.swift */,
 				AA8C0F461EFE6625005864BE /* Main.storyboard */,
 				AA8C0F491EFE6625005864BE /* Assets.xcassets */,
 				AA8C0F4B1EFE6625005864BE /* LaunchScreen.storyboard */,
