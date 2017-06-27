@@ -58,15 +58,18 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         // var text = "\(indexPath.section):\(indexPath.row)"
         
         let timeFormatter = DateComponentsFormatter()
-        let components1 = cal.dateComponents( [.hour, .minute], from: workout.startDate)
         timeFormatter.unitsStyle = .positional
         timeFormatter.allowedUnits = [ .hour, .minute ]
         timeFormatter.zeroFormattingBehavior = [ .dropLeading ]
+        let components1 = cal.dateComponents( [.hour, .minute], from: workout.startDate)
         var text = timeFormatter.string(from: components1)!
+        
+        let components2 = cal.dateComponents( [.hour, .minute], from: workout.endDate)
+        text = text + " - " + timeFormatter.string(from: components2)!
         
         let timeFormatter2 = DateComponentsFormatter()
         timeFormatter2.unitsStyle = .abbreviated
-        timeFormatter2.allowedUnits = [ .hour, .minute, .second ]
+        timeFormatter2.allowedUnits = [ .hour, .minute ]
         timeFormatter2.zeroFormattingBehavior = [ .dropLeading ]
         text = text + " " + timeFormatter2.string(from: workout.duration)!
         
