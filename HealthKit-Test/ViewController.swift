@@ -48,7 +48,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cellID")!
+        let cell = tableView.dequeueReusableCell(withIdentifier: "cellIDwalking")!
         
         let day = cal.date(byAdding: .day, value: -indexPath.section, to: cal.startOfDay(for: Date()))
         let dayData = healthKitManager.workoutData.filter { cal.isDate($0.startDate, inSameDayAs: day!)}
