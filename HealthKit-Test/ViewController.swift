@@ -32,7 +32,18 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     
     func numberOfSections(in tableView: UITableView) -> Int {
-        return healthKitManager.historyDays
+        let days = healthKitManager.workoutData.map { cal.startOfDay(for :$0.startDate) }
+        print ("days ", days.count)
+        
+        var uniqueDays: [Date] = []
+        for item in days {
+            if !uniqueDays.contains(item) {
+                uniqueDays.append(item)
+            }
+        }
+        print ("     ", uniqueDays.count)
+        
+        return uniqueDays.count
     }
     
     
