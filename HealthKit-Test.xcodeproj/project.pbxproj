@@ -14,6 +14,7 @@
 		AA8C0F4A1EFE6625005864BE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AA8C0F491EFE6625005864BE /* Assets.xcassets */; };
 		AA8C0F4D1EFE6625005864BE /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AA8C0F4B1EFE6625005864BE /* LaunchScreen.storyboard */; };
 		AA8C0F571EFE66A5005864BE /* HealthKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AA8C0F561EFE66A5005864BE /* HealthKit.framework */; };
+		AA8E7D1B1F028FEB00AF394D /* CustomTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA8E7D1A1F028FEB00AF394D /* CustomTableViewCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -27,6 +28,7 @@
 		AA8C0F4E1EFE6625005864BE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		AA8C0F541EFE66A5005864BE /* HealthKit-Test.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "HealthKit-Test.entitlements"; sourceTree = "<group>"; };
 		AA8C0F561EFE66A5005864BE /* HealthKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HealthKit.framework; path = System/Library/Frameworks/HealthKit.framework; sourceTree = SDKROOT; };
+		AA8E7D1A1F028FEB00AF394D /* CustomTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTableViewCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -64,6 +66,7 @@
 				AA8C0F541EFE66A5005864BE /* HealthKit-Test.entitlements */,
 				AA8C0F421EFE6625005864BE /* AppDelegate.swift */,
 				AA8C0F441EFE6625005864BE /* ViewController.swift */,
+				AA8E7D1A1F028FEB00AF394D /* CustomTableViewCell.swift */,
 				AA0E14971EFFDA3A005EF648 /* HealthKitManager.swift */,
 				AA8C0F461EFE6625005864BE /* Main.storyboard */,
 				AA8C0F491EFE6625005864BE /* Assets.xcassets */,
@@ -159,6 +162,7 @@
 			files = (
 				AA8C0F451EFE6625005864BE /* ViewController.swift in Sources */,
 				AA8C0F431EFE6625005864BE /* AppDelegate.swift in Sources */,
+				AA8E7D1B1F028FEB00AF394D /* CustomTableViewCell.swift in Sources */,
 				AA0E14981EFFDA3A005EF648 /* HealthKitManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

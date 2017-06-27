@@ -39,7 +39,6 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         print (NSURL (fileURLWithPath: "\(#file)").lastPathComponent!, "\(#function)")
         
-        //ourlySteps = self.stepsArray.filter { self.cal.isDateInToday ($0.timeStamp) }
         let day = cal.date(byAdding: .day, value: -section, to: cal.startOfDay(for: Date()))
         let dayData = healthKitManager.workoutData.filter { cal.isDate($0.startDate, inSameDayAs: day!)}
         
@@ -48,46 +47,48 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cellIDwalking")!
-        
         let day = cal.date(byAdding: .day, value: -indexPath.section, to: cal.startOfDay(for: Date()))
         let dayData = healthKitManager.workoutData.filter { cal.isDate($0.startDate, inSameDayAs: day!)}
         
         let workout = dayData[indexPath.row]
         
-        // var text = "\(indexPath.section):\(indexPath.row)"
-        
         let timeFormatter = DateComponentsFormatter()
         timeFormatter.unitsStyle = .positional
         timeFormatter.allowedUnits = [ .hour, .minute ]
         timeFormatter.zeroFormattingBehavior = [ .dropLeading ]
+        
         let components1 = cal.dateComponents( [.hour, .minute], from: workout.startDate)
-        var text = timeFormatter.string(from: components1)!
+        var timeString = timeFormatter.string(from: components1)!
         
         let components2 = cal.dateComponents( [.hour, .minute], from: workout.endDate)
-        text = text + " - " + timeFormatter.string(from: components2)!
+        timeString = timeString + " - " + timeFormatter.string(from: components2)!
         
         let timeFormatter2 = DateComponentsFormatter()
         timeFormatter2.unitsStyle = .abbreviated
         timeFormatter2.allowedUnits = [ .hour, .minute ]
         timeFormatter2.zeroFormattingBehavior = [ .dropLeading ]
-        text = text + " " + timeFormatter2.string(from: workout.duration)!
-        
-        text = text + " " + healthKitManager.workoutTypeString(workout.workoutActivityType)
+        let durationString = timeFormatter2.string(from: workout.duration)!
         
         let energyFormatter = EnergyFormatter()
         energyFormatter.numberFormatter.maximumFractionDigits = 0
+        energyFormatter.unitStyle = .medium
         let energy = workout.totalEnergyBurned?.doubleValue(for: HKUnit.largeCalorie())
-        text = text + " " + energyFormatter.string(fromJoules: energy!)
+        let energyString = energyFormatter.string(fromValue: energy!, unit: .calorie)
         
-        let distance = workout.totalDistance?.doubleValue(for: HKUnit.mile())
-        let numberFormatter = NumberFormatter()
-        numberFormatter.numberStyle = NumberFormatter.Style.decimal
-        numberFormatter.maximumFractionDigits = 2
-        numberFormatter.minimumFractionDigits = 2
-        text = text + " " + numberFormatter.string(from: distance! as NSNumber)!
-       
-        cell.textLabel?.text = text
+        let distance = Measurement(value: (workout.totalDistance?.doubleValue(for: HKUnit.mile()))!, unit: UnitLength.miles)
+        let distanceFormatter = MeasurementFormatter()
+        distanceFormatter.unitStyle = .medium
+        distanceFormatter.numberFormatter.maximumFractionDigits = 1
+        distanceFormatter.numberFormatter.minimumFractionDigits = 1
+        let distanceString = distanceFormatter.string(from: distance)
+        
+        
+        let cell = tableView.dequeueReusableCell(withIdentifier: "cellIDwalking")! as! CustomTableViewCell
+        cell.energyLabel.text = energyString
+        cell.durationLabel.text = durationString
+        cell.timeLabel.text = timeString
+        cell.distanceLabel.text = distanceString
+        cell.activityLabel.text = healthKitManager.workoutTypeString(workout.workoutActivityType)
         
         return cell
     }
@@ -100,7 +101,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             return "Today"
         } else {
             let formatter = DateFormatter()
-            formatter.dateFormat = "EEEE"
+            formatter.dateStyle = .full
             return formatter.string (from: day!)
         }
     }

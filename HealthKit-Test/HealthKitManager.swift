@@ -75,10 +75,14 @@ class HealthKitManager {
     
     func workoutTypeString (_ type: HKWorkoutActivityType) -> String {
         switch type {
+        case HKWorkoutActivityType.cycling:
+            return ("🚴‍♂️")
+        case HKWorkoutActivityType.running:
+            return ("🏃")
         case HKWorkoutActivityType.walking:
-            return ("walking")
+            return ("🚶")
         default:
-            return ("unknown workout type")
+            return ("?")
         }
     }
     
