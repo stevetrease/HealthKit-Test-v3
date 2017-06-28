@@ -93,6 +93,49 @@
                                             <outlet property="timeLabel" destination="nGQ-HP-1m9" id="gO4-5l-Fuw"/>
                                         </connections>
                                     </tableViewCell>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="cellIDHeader" id="Ttl-cZ-zMB" customClass="CustomTableViewHeaderCell" customModule="HealthKit_Test" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="72" width="320" height="44"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Ttl-cZ-zMB" id="czC-HR-asZ">
+                                            <rect key="frame" x="0.0" y="0.0" width="320" height="43.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <stackView opaque="NO" contentMode="scaleToFill" distribution="fillProportionally" translatesAutoresizingMaskIntoConstraints="NO" id="38g-Eg-901">
+                                                    <rect key="frame" x="0.0" y="0.0" width="320" height="43.5"/>
+                                                    <subviews>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hMu-pY-QKE">
+                                                            <rect key="frame" x="0.0" y="0.0" width="160" height="43.5"/>
+                                                            <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                                                            <nil key="textColor"/>
+                                                            <nil key="highlightedColor"/>
+                                                        </label>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6QH-0u-Agj">
+                                                            <rect key="frame" x="160" y="0.0" width="160" height="43.5"/>
+                                                            <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                                                            <nil key="textColor"/>
+                                                            <nil key="highlightedColor"/>
+                                                        </label>
+                                                    </subviews>
+                                                    <constraints>
+                                                        <constraint firstAttribute="trailing" secondItem="6QH-0u-Agj" secondAttribute="trailing" constant="5" id="3nP-5E-YPR"/>
+                                                        <constraint firstItem="hMu-pY-QKE" firstAttribute="leading" secondItem="38g-Eg-901" secondAttribute="leading" constant="5" id="fve-Fl-yhj"/>
+                                                    </constraints>
+                                                </stackView>
+                                            </subviews>
+                                            <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
+                                            <constraints>
+                                                <constraint firstItem="38g-Eg-901" firstAttribute="top" secondItem="czC-HR-asZ" secondAttribute="top" id="OfU-3B-F8b"/>
+                                                <constraint firstItem="38g-Eg-901" firstAttribute="centerY" secondItem="czC-HR-asZ" secondAttribute="centerY" id="Re3-8u-BZT"/>
+                                                <constraint firstItem="38g-Eg-901" firstAttribute="leading" secondItem="czC-HR-asZ" secondAttribute="leading" id="lXh-1c-qdd"/>
+                                                <constraint firstAttribute="trailing" secondItem="38g-Eg-901" secondAttribute="trailing" id="wJW-TX-vEV"/>
+                                                <constraint firstAttribute="bottom" secondItem="38g-Eg-901" secondAttribute="bottom" id="xm4-U7-6fX"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                        <connections>
+                                            <outlet property="leftLabel" destination="hMu-pY-QKE" id="hai-KI-KEX"/>
+                                            <outlet property="rightLabel" destination="6QH-0u-Agj" id="UvJ-8k-CKs"/>
+                                        </connections>
+                                    </tableViewCell>
                                 </prototypes>
                                 <connections>
                                     <outlet property="dataSource" destination="BYZ-38-t0r" id="6xH-er-9Vd"/>

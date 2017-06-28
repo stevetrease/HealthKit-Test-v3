@@ -46,6 +46,27 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     }
     
     
+    // custom section header view
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        var leftLabelText = "Today"
+        if section != 0 {
+            let day = cal.date(byAdding: .day, value: -section, to: cal.startOfDay(for: Date()))
+            let formatter = DateFormatter()
+            formatter.dateStyle = .full
+            leftLabelText = formatter.string (from: day!)
+        }
+        
+        let header = tableView.dequeueReusableCell(withIdentifier: "cellIDHeader") as! CustomTableViewHeaderCell
+        
+        header.leftLabel.text = leftLabelText
+        header.rightLabel.text = ""
+        
+        // header.layer.cornerRadius = 5
+        
+        return header
+    }
+    
+    
     // standard title for the section
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         let day = cal.date(byAdding: .day, value: -section, to: cal.startOfDay(for: Date()))
