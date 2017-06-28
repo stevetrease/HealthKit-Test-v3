@@ -12,21 +12,16 @@ import HealthKit
 
 var healthKitManager = HealthKitManager()
 
-class HealthDataType {
-    var timeStamp = Date()
-    var data = 0.0
-}
-
 
 class HealthKitManager {
-    let historyDays = 14
+    let historyDays = 28
     
     static let sharedInstance = HealthKitManager()
-    
     let healthStore = HKHealthStore()
     
     private let cal = Calendar.current
     
+    // on init check for HealthKit authorisations
     init() {
         print (NSURL (fileURLWithPath: "\(#file)").lastPathComponent!, "\(#function)")
         
@@ -34,15 +29,8 @@ class HealthKitManager {
     }
     
     
-    private var earliestPermittedSampleDate: Date {
-        return (healthStore.earliestPermittedSampleDate())
-    }
-    
-    
     var workoutData: [HKWorkout] = []
     func getWorkouts (completion:@escaping (Double?)->()) {
-        print (NSURL (fileURLWithPath: "\(#file)").lastPathComponent!, "\(#function)")
-        
         //   Define the sample type
         let sampleType = HKObjectType.workoutType()
         
@@ -73,7 +61,7 @@ class HealthKitManager {
     }
     
     
-    func workoutTypeString (_ type: HKWorkoutActivityType) -> String {
+    func workoutTypeIcon (_ type: HKWorkoutActivityType) -> String {
         switch type {
         case HKWorkoutActivityType.cycling:
             return ("🚴‍♂️")
@@ -107,7 +95,7 @@ class HealthKitManager {
         } else {
             isHealthKitEnabled = false
         }
-        print ("HeakthKit available? ", isHealthKitEnabled)
+        print (NSURL (fileURLWithPath: "\(#file)").lastPathComponent!, "\(#function)", "HeakthKit available:", isHealthKitEnabled)
     }
 }
 

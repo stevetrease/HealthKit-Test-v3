@@ -31,6 +31,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     }
     
     
+    // one section per unique day in the workoutData
     func numberOfSections(in tableView: UITableView) -> Int {
         let days = healthKitManager.workoutData.map { cal.startOfDay(for :$0.startDate) }
         
@@ -45,9 +46,22 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     }
     
     
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        print (NSURL (fileURLWithPath: "\(#file)").lastPathComponent!, "\(#function)")
+    // standard title for the section
+    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        let day = cal.date(byAdding: .day, value: -section, to: cal.startOfDay(for: Date()))
         
+        if section == 0 {
+            return "Today"
+        } else {
+            let formatter = DateFormatter()
+            formatter.dateStyle = .full
+            return formatter.string (from: day!)
+        }
+    }
+    
+    
+    // one row in each section for each workout in that day in the workoutData
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         let day = cal.date(byAdding: .day, value: -section, to: cal.startOfDay(for: Date()))
         let dayData = healthKitManager.workoutData.filter { cal.isDate($0.startDate, inSameDayAs: day!)}
         
@@ -55,6 +69,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     }
     
     
+    // nicely formatted custom TableViewCell for each workoutData item
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let day = cal.date(byAdding: .day, value: -indexPath.section, to: cal.startOfDay(for: Date()))
         let dayData = healthKitManager.workoutData.filter { cal.isDate($0.startDate, inSameDayAs: day!)}
@@ -91,34 +106,20 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         distanceFormatter.numberFormatter.minimumFractionDigits = 1
         let distanceString = distanceFormatter.string(from: distance)
         
-        
         let cell = tableView.dequeueReusableCell(withIdentifier: "cellIDwalking")! as! CustomTableViewCell
         cell.energyLabel.text = energyString
         cell.durationLabel.text = durationString
         cell.timeLabel.text = timeString
         cell.distanceLabel.text = distanceString
-        cell.activityLabel.text = healthKitManager.workoutTypeString(workout.workoutActivityType)
+        cell.activityLabel.text = healthKitManager.workoutTypeIcon(workout.workoutActivityType)
         
         return cell
     }
     
     
-    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        let day = cal.date(byAdding: .day, value: -section, to: cal.startOfDay(for: Date()))
-        
-        if section == 0 {
-            return "Today"
-        } else {
-            let formatter = DateFormatter()
-            formatter.dateStyle = .full
-            return formatter.string (from: day!)
-        }
-    }
-    
-    
+    // refresh workoutData and then update the tableView
     func getData () {
         healthKitManager.getWorkouts (completion: { (x) in
-            print (NSURL (fileURLWithPath: "\(#file)").lastPathComponent!, "\(#function)")
             DispatchQueue.main.async(execute: {
                 self.tableView.reloadData()
             })
@@ -127,6 +128,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     }
     
     
+    // screen tap to refresh workoutData
     @IBAction func screenTappedTriggered(sender: AnyObject) {
         print (NSURL (fileURLWithPath: "\(#file)").lastPathComponent!, "\(#function)")
         getData()
