@@ -1,7 +1,4 @@
-//
-//  ViewController.swift
-//  HealthKit-Test
-//
+
 //  Created by Steve on 24/06/2017.
 //  Copyright © 2017 Steve. All rights reserved.
 //
@@ -10,7 +7,7 @@ import UIKit
 import HealthKit
 
 
-class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class ActivityViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     @IBOutlet var tableView: UITableView!
     
