@@ -29,6 +29,11 @@ class HealthKitManager {
     }
     
     
+    func stepsBetween (startDate: Date, endDate: Date) -> Int {
+        return (Int(arc4random_uniform(10000) + 1))
+    }
+    
+    
     var workoutData: [HKWorkout] = []
     func getWorkouts (completion:@escaping (Double?)->()) {
         //   Define the sample type
