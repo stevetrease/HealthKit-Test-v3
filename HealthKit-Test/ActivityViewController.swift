@@ -131,12 +131,15 @@ class ActivityViewController: UIViewController, UITableViewDelegate, UITableView
         cell.distanceLabel.text = distanceString
         cell.activityLabel.text = healthKitManager.workoutTypeIcon(workout.workoutActivityType)
         
-        let stepFormatter = NumberFormatter()
-        stepFormatter.maximumFractionDigits = 0
-        stepFormatter.numberStyle = NumberFormatter.Style.decimal
-        let steps = healthKitManager.stepsBetween(startDate: workout.startDate, endDate: workout.endDate)
-        cell.stepsLabel.text = stepFormatter.string(from: steps as NSNumber)!
-        
+        healthKitManager.stepsBetween(startDate: workout.startDate, endDate: workout.endDate, completion: { (steps) in
+            OperationQueue.main.addOperation {
+                let stepFormatter = NumberFormatter()
+                stepFormatter.maximumFractionDigits = 0
+                stepFormatter.numberStyle = NumberFormatter.Style.decimal
+                cell.stepsLabel.text = stepFormatter.string(from: steps! as NSNumber)!
+            }
+        })
+                
         return cell
     }
     

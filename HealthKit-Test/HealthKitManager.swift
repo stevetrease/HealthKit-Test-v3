@@ -29,8 +29,25 @@ class HealthKitManager {
     }
     
     
-    func stepsBetween (startDate: Date, endDate: Date) -> Int {
-        return (Int(arc4random_uniform(10000) + 1))
+    func stepsBetween (startDate: Date, endDate: Date, completion:@escaping (Int?)->()) {
+        let type = HKQuantityType.quantityType(forIdentifier: HKQuantityTypeIdentifier.stepCount)
+        
+        //  Set the predicate
+        let predicate = HKQuery.predicateForSamples(withStart: startDate, end: endDate, options: [])
+        
+        let query = HKStatisticsQuery(quantityType: type!, quantitySamplePredicate: predicate, options: .cumulativeSum) { query, results, error in
+            let quantity = results?.sumQuantity()
+            let unit = HKUnit.count()
+            let steps = quantity?.doubleValue(for: unit)
+            
+            if steps != nil {
+                completion(Int(steps!))
+            } else {
+                print("getTodayStepCount: results are nil - returning zero steps")
+                completion(0)
+            }
+        }
+        healthStore.execute(query)
     }
     
     
