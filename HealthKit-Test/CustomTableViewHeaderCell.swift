@@ -12,6 +12,9 @@ class CustomTableViewHeaderCell: UITableViewCell {
     
     @IBOutlet weak var leftLabel: UILabel!
     @IBOutlet weak var rightLabel: UILabel!
+    @IBOutlet weak var energyLabel: UILabel!
+    @IBOutlet weak var distanceLabel: UILabel!
+    @IBOutlet weak var stepsLabel: UILabel!
     
     
     override func awakeFromNib() {

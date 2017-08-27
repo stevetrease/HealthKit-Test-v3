@@ -18,6 +18,10 @@ class ActivityViewController: UIViewController, UITableViewDelegate, UITableView
     override func viewDidLoad() {
         super.viewDidLoad()
         print (NSURL (fileURLWithPath: "\(#file)").lastPathComponent!, "\(#function)")
+        
+        tableView.sectionHeaderHeight = UITableViewAutomaticDimension
+        tableView.estimatedSectionHeaderHeight = 30.0
+        
         getData()
     }
     
@@ -42,7 +46,7 @@ class ActivityViewController: UIViewController, UITableViewDelegate, UITableView
         return uniqueDays.count
     }
     
-    
+      
     // custom section header view
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         var leftLabelText = "Today"
@@ -58,7 +62,9 @@ class ActivityViewController: UIViewController, UITableViewDelegate, UITableView
         header.leftLabel.text = leftLabelText
         header.rightLabel.text = ""
         
-        // header.layer.cornerRadius = 5
+        header.energyLabel.text = "E"
+        header.stepsLabel.text = "S"
+        header.distanceLabel.text = "D"
         
         return header
     }
