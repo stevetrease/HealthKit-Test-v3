@@ -49,22 +49,30 @@ class ActivityViewController: UIViewController, UITableViewDelegate, UITableView
       
     // custom section header view
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        var leftLabelText = "Today"
+        let header = tableView.dequeueReusableCell(withIdentifier: "cellIDHeader") as! CustomTableViewHeaderCell
+        
+        let leftLabelText: String
         if section != 0 {
             let day = cal.date(byAdding: .day, value: -section, to: cal.startOfDay(for: Date()))
             let formatter = DateFormatter()
             formatter.dateStyle = .full
             leftLabelText = formatter.string (from: day!)
+        } else {
+            leftLabelText = "Today"
         }
         
-        let header = tableView.dequeueReusableCell(withIdentifier: "cellIDHeader") as! CustomTableViewHeaderCell
-        
         header.leftLabel.text = leftLabelText
-        header.rightLabel.text = ""
         
-        header.energyLabel.text = "E"
-        header.stepsLabel.text = "S"
-        header.distanceLabel.text = "D"
+        let startDay = cal.date(byAdding: .day, value: -section, to: cal.startOfDay(for: Date()))
+        let endDay = cal.date(byAdding: .day, value: -section + 1, to: cal.startOfDay(for: Date()))
+        healthKitManager.stepsBetween(startDate: startDay!, endDate: endDay!, completion: { (steps) in
+            OperationQueue.main.addOperation {
+                let stepFormatter = NumberFormatter()
+                stepFormatter.maximumFractionDigits = 0
+                stepFormatter.numberStyle = NumberFormatter.Style.decimal
+                header.rightLabel.text = stepFormatter.string(from: steps! as NSNumber)!
+            }
+        })
         
         return header
     }
@@ -77,9 +85,9 @@ class ActivityViewController: UIViewController, UITableViewDelegate, UITableView
         if section == 0 {
             return "Today"
         } else {
-            let formatter = DateFormatter()
-            formatter.dateStyle = .full
-            return formatter.string (from: day!)
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateStyle = .full
+            return dateFormatter.string (from: day!)
         }
     }
     
@@ -157,7 +165,6 @@ class ActivityViewController: UIViewController, UITableViewDelegate, UITableView
                 self.tableView.reloadData()
             })
         })
-        
     }
     
     
