@@ -16,6 +16,8 @@ class CustomTableViewHeaderCell: UITableViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
+        
+        rightLabel.text = ""
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {
