@@ -12,9 +12,8 @@ import HealthKit
 
 var healthKitManager = HealthKitManager()
 
-
 class HealthKitManager {
-    let historyDays = 28
+    let numberOfDays = 7
     
     static let sharedInstance = HealthKitManager()
     let healthStore = HKHealthStore()
@@ -29,73 +28,54 @@ class HealthKitManager {
     }
     
     
-    func stepsBetween (startDate: Date, endDate: Date, completion:@escaping (Int?)->()) {
+    var dailyStepsArray: [(timeStamp: Date, value: Double)] = []
+    
+    func getDailySteps (completion:@escaping ()->()) {
+        print (NSURL (fileURLWithPath: "\(#file)").lastPathComponent!, "\(#function)")
+        
+        var interval = DateComponents()
+        interval.day = 1
+        
+        let anchorDate = cal.date(byAdding: .day, value: -1, to: cal.startOfDay(for: Date()))
+        
         let type = HKQuantityType.quantityType(forIdentifier: HKQuantityTypeIdentifier.stepCount)
         
-        //  Set the predicate
-        let predicate = HKQuery.predicateForSamples(withStart: startDate, end: endDate, options: [])
+        // Create the query
+        let query = HKStatisticsCollectionQuery(quantityType: type!,
+                                                quantitySamplePredicate: nil,
+                                                options: .cumulativeSum,
+                                                anchorDate: anchorDate!,
+                                                intervalComponents: interval)
         
-        let query = HKStatisticsQuery(quantityType: type!, quantitySamplePredicate: predicate, options: .cumulativeSum) { query, results, error in
-            let quantity = results?.sumQuantity()
-            let unit = HKUnit.count()
-            let steps = quantity?.doubleValue(for: unit)
+        // Set the results handler
+        query.initialResultsHandler = {
+            query, results, error in
+            print (NSURL (fileURLWithPath: "\(#file)").lastPathComponent!, "\(#function)")
             
-            if steps != nil {
-                completion(Int(steps!))
-            } else {
-                print("getTodayStepCount: results are nil - returning zero steps")
-                completion(0)
+            guard let statsCollection = results else {
+                // Perform proper error handling here
+                fatalError("*** An error occurred while calculating the statistics: \(String(describing: error?.localizedDescription)) ***")
             }
-        }
-        healthStore.execute(query)
-    }
-    
-    
-    var workoutData: [HKWorkout] = []
-    func getWorkouts (completion:@escaping (Double?)->()) {
-        //   Define the sample type
-        let sampleType = HKObjectType.workoutType()
-        
-        let endDate = Date()
-        let startDate =  cal.date(byAdding: .day, value: -historyDays, to: endDate)
-        
-        let predicate = HKQuery.predicateForSamples(withStart: startDate, end: endDate, options: .strictStartDate)
-        let sortDescriptor = NSSortDescriptor(key: HKSampleSortIdentifierEndDate, ascending: false)
-        let limit = 0
-        
-        let query = HKSampleQuery(sampleType: sampleType, predicate: predicate, limit: limit, sortDescriptors: [ sortDescriptor ]) { query, results, error in
-            if let results = results {
-                
-                self.workoutData = []
-                
-                for result in results {
-                    if let workout = result as? HKWorkout {
-                        self.workoutData.append(workout)
-                    }
+            
+            let endDate = Date()
+            let startDate = self.cal.date(byAdding: .day, value: -self.numberOfDays, to: endDate)
+            
+            var tempArray: [(timeStamp: Date, value: Double)] = []
+            
+            statsCollection.enumerateStatistics(from: startDate!, to: endDate) { statistics, stop in
+                if let quantity = statistics.sumQuantity() {
+                    let date = statistics.startDate
+                    let steps = quantity.doubleValue(for: HKUnit.count())
+                    
+                    // tempArray.append((timeStamp: date, value: steps))
+                    tempArray.insert((timeStamp: date, value: steps), at: 0)
                 }
             }
-            else {
-                print ("No results were returned, check the error")
-            }
-            completion (0.0)
+            self.dailyStepsArray = tempArray
+            completion ()
         }
         healthStore.execute(query)
     }
-    
-    
-    func workoutTypeIcon (_ type: HKWorkoutActivityType) -> String {
-        switch type {
-        case HKWorkoutActivityType.cycling:
-            return ("🚴‍♂️")
-        case HKWorkoutActivityType.running:
-            return ("🏃")
-        case HKWorkoutActivityType.walking:
-            return ("🚶")
-        default:
-            return ("?")
-        }
-    }
-    
     
     private func checkHealthKitAuthorization() ->() {
         // Default to assuming that we're authorized
@@ -104,7 +84,6 @@ class HealthKitManager {
         // Do we have access to HealthKit on this device?
         if HKHealthStore.isHealthDataAvailable() {
             let healthKitTypesToRead : Set = [
-                HKObjectType.workoutType(),
                 HKObjectType.quantityType(forIdentifier:HKQuantityTypeIdentifier.stepCount)!
             ]
             healthStore.requestAuthorization(toShare: nil, read: healthKitTypesToRead) { (success, error) -> Void in
