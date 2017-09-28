@@ -61,9 +61,9 @@ class ActivityViewController: UIViewController, UITableViewDelegate, UITableView
     func getData () {
         healthKitManager.getDailySteps(completion: { () in
             DispatchQueue.main.async(execute: {
-                
                 self.tableView.reloadData()
                 
+                // determine date of most steps
                 var max = healthKitManager.dailyStepsArray[0]
                 for element in healthKitManager.dailyStepsArray {
                     if element.value > max.value {
