@@ -19,9 +19,6 @@ class ActivityViewController: UIViewController, UITableViewDelegate, UITableView
         super.viewDidLoad()
         print (NSURL (fileURLWithPath: "\(#file)").lastPathComponent!, "\(#function)")
         
-        tableView.sectionHeaderHeight = UITableViewAutomaticDimension
-        tableView.estimatedSectionHeaderHeight = 30.0
-        
         getData()
     }
     
@@ -45,7 +42,7 @@ class ActivityViewController: UIViewController, UITableViewDelegate, UITableView
         
         let date = healthKitManager.dailyStepsArray[indexPath.row].timeStamp
         let formatter = DateFormatter()
-        formatter.dateStyle = .full
+        formatter.dateStyle = .medium
         let dateString = formatter.string (from: date)
         cell.textLabel?.text = dateString
         
@@ -64,7 +61,16 @@ class ActivityViewController: UIViewController, UITableViewDelegate, UITableView
     func getData () {
         healthKitManager.getDailySteps(completion: { () in
             DispatchQueue.main.async(execute: {
+                
                 self.tableView.reloadData()
+                
+                var max = healthKitManager.dailyStepsArray[0]
+                for element in healthKitManager.dailyStepsArray {
+                    if element.value > max.value {
+                        max = element
+                    }
+                }
+                print ("maximum steps of \(max.value) on \(max.timeStamp)")
             })
         })
     }

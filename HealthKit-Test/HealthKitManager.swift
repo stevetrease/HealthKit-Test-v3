@@ -13,7 +13,7 @@ import HealthKit
 var healthKitManager = HealthKitManager()
 
 class HealthKitManager {
-    let numberOfDays = 7
+    private let numberOfDays = 365 / 4
     
     static let sharedInstance = HealthKitManager()
     let healthStore = HKHealthStore()
@@ -30,6 +30,7 @@ class HealthKitManager {
     
     var dailyStepsArray: [(timeStamp: Date, value: Double)] = []
     
+    
     func getDailySteps (completion:@escaping ()->()) {
         print (NSURL (fileURLWithPath: "\(#file)").lastPathComponent!, "\(#function)")
         
@@ -39,6 +40,8 @@ class HealthKitManager {
         let anchorDate = cal.date(byAdding: .day, value: -1, to: cal.startOfDay(for: Date()))
         
         let type = HKQuantityType.quantityType(forIdentifier: HKQuantityTypeIdentifier.stepCount)
+        
+        let queryStartTime = Date()
         
         // Create the query
         let query = HKStatisticsCollectionQuery(quantityType: type!,
@@ -67,15 +70,23 @@ class HealthKitManager {
                     let date = statistics.startDate
                     let steps = quantity.doubleValue(for: HKUnit.count())
                     
-                    // tempArray.append((timeStamp: date, value: steps))
                     tempArray.insert((timeStamp: date, value: steps), at: 0)
                 }
             }
             self.dailyStepsArray = tempArray
+            
+            let queryEndTime = Date()
+            let elapsedTime: Double = queryEndTime.timeIntervalSince(queryStartTime)
+            let elapsedTimePerDay = elapsedTime / Double (self.numberOfDays)
+            
+            print ("elapsed time        : \(elapsedTime)")
+            print ("elapsed time per day: \(elapsedTimePerDay)")
+            
             completion ()
         }
         healthStore.execute(query)
     }
+    
     
     private func checkHealthKitAuthorization() ->() {
         // Default to assuming that we're authorized
