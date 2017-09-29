@@ -54,9 +54,9 @@ class ActivityViewController: UIViewController, UITableViewDelegate, UITableView
         cell.detailTextLabel?.text = stepString
         
         if cal.isDateInWeekend (date) {
-            cell.backgroundColor = UIColor.lightGray.withAlphaComponent(0.2)
+            cell.backgroundColor = UIColor (white: 0.95, alpha: 1.0)
         } else {
-            cell.backgroundColor = nil
+            cell.backgroundColor = .clear
         }
         
         return cell
