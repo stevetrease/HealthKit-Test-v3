@@ -53,6 +53,12 @@ class ActivityViewController: UIViewController, UITableViewDelegate, UITableView
         let stepString = stepFormatter.string (from: steps as NSNumber)!
         cell.detailTextLabel?.text = stepString
         
+        if cal.isDateInWeekend (date) {
+            cell.backgroundColor = UIColor.lightGray.withAlphaComponent(0.2)
+        } else {
+            cell.backgroundColor = nil
+        }
+        
         return cell
     }
     
