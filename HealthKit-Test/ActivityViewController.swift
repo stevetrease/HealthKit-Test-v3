@@ -41,10 +41,15 @@ class ActivityViewController: UIViewController, UITableViewDelegate, UITableView
         let cell = tableView.dequeueReusableCell(withIdentifier: "defaultCell")!
         
         let date = healthKitManager.dailyStepsArray[indexPath.row].timeStamp
-        let formatter = DateFormatter()
-        formatter.dateStyle = .medium
-        let dateString = formatter.string (from: date)
-        cell.textLabel?.text = dateString
+        
+        if (cal.isDateInToday(date)) {
+            cell.textLabel?.text = "Today"
+        } else {
+            let formatter = DateFormatter()
+            formatter.dateStyle = .medium
+            let dateString = formatter.string (from: date)
+            cell.textLabel?.text = dateString
+        }
         
         let steps = healthKitManager.dailyStepsArray[indexPath.row].value
         let stepFormatter = NumberFormatter()
