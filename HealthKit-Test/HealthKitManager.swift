@@ -60,12 +60,12 @@ class HealthKitManager {
                 fatalError("*** An error occurred while calculating the statistics: \(String(describing: error?.localizedDescription)) ***")
             }
             
-            let endDate = Date()
-            let startDate = self.cal.date(byAdding: .day, value: -self.numberOfDays, to: endDate)
+            let endDate = self.cal.date(byAdding: .day, value: -1, to: self.cal.startOfDay(for: Date()))
+            let startDate = self.cal.date(byAdding: .day, value: -self.numberOfDays, to: endDate!)
             
             var tempArray: [(timeStamp: Date, value: Double)] = []
             
-            statsCollection.enumerateStatistics(from: startDate!, to: endDate) { statistics, stop in
+            statsCollection.enumerateStatistics(from: startDate!, to: endDate!) { statistics, stop in
                 if let quantity = statistics.sumQuantity() {
                     let date = statistics.startDate
                     let steps = quantity.doubleValue(for: HKUnit.count())

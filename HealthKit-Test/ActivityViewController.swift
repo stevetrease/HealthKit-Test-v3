@@ -10,6 +10,8 @@ import HealthKit
 class ActivityViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     @IBOutlet var tableView: UITableView!
+    @IBOutlet var todayStepsLabel: UILabel!
+    @IBOutlet var averageStepsLabel: UILabel!
     
     let healthStore = HKHealthStore()
     let cal = Calendar.current
@@ -18,6 +20,9 @@ class ActivityViewController: UIViewController, UITableViewDelegate, UITableView
     override func viewDidLoad() {
         super.viewDidLoad()
         print (NSURL (fileURLWithPath: "\(#file)").lastPathComponent!, "\(#function)")
+        
+        todayStepsLabel.text = " "
+        averageStepsLabel.text = " "
         
         getData()
     }
@@ -31,7 +36,6 @@ class ActivityViewController: UIViewController, UITableViewDelegate, UITableView
     
     // one row in each section for each workout in that day in the workoutData
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        print (healthKitManager.dailyStepsArray.count)
         return healthKitManager.dailyStepsArray.count
     }
     
