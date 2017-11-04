@@ -80,7 +80,7 @@ class ActivityViewController: UIViewController, UITableViewDelegate, UITableView
     func getTopData () {
         healthKitManager.getTodayStepCount (completion: { (steps) in
             OperationQueue.main.addOperation {
-                print ("getTopData callback")
+                print ("getTopData getTodayStepCount callback")
                 let numberFormatter = NumberFormatter()
                 numberFormatter.maximumFractionDigits = 0
                 numberFormatter.numberStyle = NumberFormatter.Style.decimal
@@ -91,6 +91,7 @@ class ActivityViewController: UIViewController, UITableViewDelegate, UITableView
         
         healthKitManager.getStepsAverage (completion: { (steps) in
             OperationQueue.main.addOperation {
+                print ("getTopData getStepsAverage callback")
                 let numberFormatter = NumberFormatter()
                 numberFormatter.maximumFractionDigits = 0
                 numberFormatter.numberStyle = NumberFormatter.Style.decimal
