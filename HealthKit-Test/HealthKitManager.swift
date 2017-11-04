@@ -13,12 +13,14 @@ import HealthKit
 var healthKitManager = HealthKitManager()
 
 class HealthKitManager {
-    private let numberOfDays = 365 / 4
-    
     static let sharedInstance = HealthKitManager()
     let healthStore = HKHealthStore()
     
+    private let numberOfDays = 365 / 4
+    let historyDays = 7
+    
     private let cal = Calendar.current
+    
     
     // on init check for HealthKit authorisations
     init() {
@@ -31,6 +33,70 @@ class HealthKitManager {
     var dailyStepsArray: [(timeStamp: Date, value: Double)] = []
     
     
+    var stepsToday: Double = 0.0
+    func getTodayStepCount(completion:@escaping (Double?)->()) {
+        print (NSURL (fileURLWithPath: "\(#file)").lastPathComponent!, "\(#function)")
+        
+        //   Define the sample type
+        let type = HKQuantityType.quantityType(forIdentifier: HKQuantityTypeIdentifier.stepCount)
+        
+        let startDate = cal.startOfDay(for: Date())
+        let endDate = Date()
+        
+        //  Set the predicate
+        let predicate = HKQuery.predicateForSamples(withStart: startDate, end: endDate, options: [])
+        
+        let query = HKStatisticsQuery(quantityType: type!, quantitySamplePredicate: predicate, options: .cumulativeSum) { query, results, error in
+            let quantity = results?.sumQuantity()
+            let unit = HKUnit.count()
+            let steps = quantity?.doubleValue(for: unit)
+            
+            if steps != nil {
+                self.stepsToday = steps!
+                completion(steps)
+            } else {
+                print("getTodayStepCount: results are nil - returning zero steps")
+                self.stepsToday = 0.0
+                completion(0.0)
+            }
+        }
+        healthStore.execute(query)
+    }
+    
+    
+    
+    var stepsAverage: Double = 0.0
+    func getStepsAverage (completion:@escaping (Double?)->()) {
+        print (NSURL (fileURLWithPath: "\(#file)").lastPathComponent!, "\(#function)")
+        
+        //   Define the sample type
+        let type = HKQuantityType.quantityType(forIdentifier: HKQuantityTypeIdentifier.stepCount)
+        
+        let endDate = cal.startOfDay(for: Date())
+        let startDate =  cal.date(byAdding: .day, value: -historyDays, to: endDate)
+        
+        //  Set the predicate
+        let predicate = HKQuery.predicateForSamples(withStart: startDate, end: endDate, options: [])
+        
+        let query = HKStatisticsQuery(quantityType: type!, quantitySamplePredicate: predicate, options: .cumulativeSum) { query, results, error in
+            let quantity = results?.sumQuantity()
+            let unit = HKUnit.count()
+            let steps = quantity?.doubleValue(for: unit)
+            
+            if steps != nil {
+                self.stepsAverage = steps! / Double(self.historyDays)
+                completion(steps! / Double(self.historyDays))
+            } else {
+                print("getStepsAverage: results are nil - returning zero steps")
+                self.stepsAverage = 0.0
+                completion(0.0)
+            }
+        }
+        healthStore.execute(query)
+    }
+    
+    
+
     func getDailySteps (completion:@escaping ()->()) {
         print (NSURL (fileURLWithPath: "\(#file)").lastPathComponent!, "\(#function)")
         

@@ -24,8 +24,10 @@ class ActivityViewController: UIViewController, UITableViewDelegate, UITableView
         todayStepsLabel.text = " "
         averageStepsLabel.text = " "
         
+        getTopData()
         getData()
     }
+    
     
     
     override func didReceiveMemoryWarning() {
@@ -34,10 +36,12 @@ class ActivityViewController: UIViewController, UITableViewDelegate, UITableView
     }
  
     
+    
     // one row in each section for each workout in that day in the workoutData
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return healthKitManager.dailyStepsArray.count
     }
+    
     
     
     // nicely formatted custom TableViewCell for each workoutData item
@@ -72,10 +76,42 @@ class ActivityViewController: UIViewController, UITableViewDelegate, UITableView
     }
     
     
+    
+    func getTopData () {
+        healthKitManager.getTodayStepCount (completion: { (steps) in
+            OperationQueue.main.addOperation {
+                print ("getTopData callback")
+                let numberFormatter = NumberFormatter()
+                numberFormatter.maximumFractionDigits = 0
+                numberFormatter.numberStyle = NumberFormatter.Style.decimal
+                let number = numberFormatter.string(from: healthKitManager.stepsToday as NSNumber)!
+                self.todayStepsLabel.text = "\(number) today"
+            }
+        })
+        
+        healthKitManager.getStepsAverage (completion: { (steps) in
+            OperationQueue.main.addOperation {
+                let numberFormatter = NumberFormatter()
+                numberFormatter.maximumFractionDigits = 0
+                numberFormatter.numberStyle = NumberFormatter.Style.decimal
+                let number = numberFormatter.string(from: healthKitManager.stepsAverage as NSNumber)!
+                
+                numberFormatter.maximumFractionDigits = 0
+                numberFormatter.numberStyle = NumberFormatter.Style.spellOut
+                let number2 = numberFormatter.string(from: healthKitManager.historyDays as NSNumber)!
+                
+                self.averageStepsLabel.text = "\(number) \(number2) day average"
+            }
+        })
+    }
+    
+    
+    
     // refresh workoutData and then update the tableView
     func getData () {
         healthKitManager.getDailySteps(completion: { () in
             DispatchQueue.main.async(execute: {
+                print ("getData callback")
                 self.tableView.reloadData()
                 
                 // determine date of most steps
@@ -91,9 +127,11 @@ class ActivityViewController: UIViewController, UITableViewDelegate, UITableView
     }
     
     
+    
     // screen tap to refresh workoutData
     @IBAction func screenTappedTriggered(sender: AnyObject) {
         print (NSURL (fileURLWithPath: "\(#file)").lastPathComponent!, "\(#function)")
+        getTopData()
         getData()
     }
 }
