@@ -106,7 +106,7 @@ class ActivityViewController: UIViewController, UITableViewDelegate, UITableView
                 self.todayStepsLabel.text = "\(number) today"
                 
                 if (healthKitManager.stepsToday > healthKitManager.stepsAverage) {
-                    self.todayStepsLabel.textColor = UIColor(red: 0, green: 0.5, blue: 0, alpha: 1.0)
+                    self.todayStepsLabel.textColor = UIColor(red: 0, green: 0.4, blue: 0, alpha: 1.0)
                 } else {
                     self.todayStepsLabel.textColor = .black
                 }
