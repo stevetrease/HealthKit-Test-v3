@@ -15,6 +15,7 @@ class ActivityViewController: UIViewController, UITableViewDelegate, UITableView
     
     let healthStore = HKHealthStore()
     let cal = Calendar.current
+    var stepsArray: [(timeStamp: Date, value: Double)] = []
        
     
     override func viewDidLoad() {
@@ -39,6 +40,7 @@ class ActivityViewController: UIViewController, UITableViewDelegate, UITableView
     
     // one row in each section for each workout in that day in the workoutData
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        // return stepsArray.count
         return healthKitManager.dailyStepsArray.count
     }
     
@@ -49,6 +51,7 @@ class ActivityViewController: UIViewController, UITableViewDelegate, UITableView
         let cell = tableView.dequeueReusableCell(withIdentifier: "defaultCell")!
         
         let date = healthKitManager.dailyStepsArray[indexPath.row].timeStamp
+        // let date = stepsArray[indexPath.row].timeStamp
         
         if (cal.isDateInToday(date)) {
             cell.textLabel?.text = "Today"
@@ -60,6 +63,7 @@ class ActivityViewController: UIViewController, UITableViewDelegate, UITableView
         }
         
         let steps = healthKitManager.dailyStepsArray[indexPath.row].value
+        // let steps = stepsArray[indexPath.row].value
         let stepFormatter = NumberFormatter()
         stepFormatter.maximumFractionDigits = 0
         stepFormatter.numberStyle = NumberFormatter.Style.decimal
@@ -79,29 +83,33 @@ class ActivityViewController: UIViewController, UITableViewDelegate, UITableView
     
     func getTopData () {
         healthKitManager.getTodayStepCount (completion: { (steps) in
+            healthKitManager.getStepsAverage (completion: { (steps) in
+                OperationQueue.main.addOperation {
+                    let numberFormatter = NumberFormatter()
+                    numberFormatter.maximumFractionDigits = 0
+                    numberFormatter.numberStyle = NumberFormatter.Style.decimal
+                    let number = numberFormatter.string(from: healthKitManager.stepsAverage as NSNumber)!
+                    
+                    numberFormatter.maximumFractionDigits = 0
+                    numberFormatter.numberStyle = NumberFormatter.Style.spellOut
+                    let number2 = numberFormatter.string(from: healthKitManager.historyDays as NSNumber)!
+                    
+                    self.averageStepsLabel.text = "\(number) \(number2) day average"
+                }
+            })
+            
             OperationQueue.main.addOperation {
-                print ("getTopData getTodayStepCount callback")
                 let numberFormatter = NumberFormatter()
                 numberFormatter.maximumFractionDigits = 0
                 numberFormatter.numberStyle = NumberFormatter.Style.decimal
                 let number = numberFormatter.string(from: healthKitManager.stepsToday as NSNumber)!
                 self.todayStepsLabel.text = "\(number) today"
-            }
-        })
-        
-        healthKitManager.getStepsAverage (completion: { (steps) in
-            OperationQueue.main.addOperation {
-                print ("getTopData getStepsAverage callback")
-                let numberFormatter = NumberFormatter()
-                numberFormatter.maximumFractionDigits = 0
-                numberFormatter.numberStyle = NumberFormatter.Style.decimal
-                let number = numberFormatter.string(from: healthKitManager.stepsAverage as NSNumber)!
                 
-                numberFormatter.maximumFractionDigits = 0
-                numberFormatter.numberStyle = NumberFormatter.Style.spellOut
-                let number2 = numberFormatter.string(from: healthKitManager.historyDays as NSNumber)!
-                
-                self.averageStepsLabel.text = "\(number) \(number2) day average"
+                if (healthKitManager.stepsToday > healthKitManager.stepsAverage) {
+                    self.todayStepsLabel.textColor = UIColor(red: 0, green: 0.5, blue: 0, alpha: 1.0)
+                } else {
+                    self.todayStepsLabel.textColor = .black
+                }
             }
         })
     }
@@ -116,15 +124,25 @@ class ActivityViewController: UIViewController, UITableViewDelegate, UITableView
                 self.tableView.reloadData()
                 
                 // determine date of most steps
-                var max = healthKitManager.dailyStepsArray[0]
+                /* var max = healthKitManager.dailyStepsArray[0]
                 for element in healthKitManager.dailyStepsArray {
                     if element.value > max.value {
                         max = element
                     }
                 }
-                print ("maximum steps of \(max.value) on \(max.timeStamp)")
+                print ("maximum steps of \(max.value) on \(max.timeStamp)") */
             })
         })
+        /*
+        for day in 1...28 {
+            let date = cal.date(byAdding: .day, value: -day, to: Date())!
+            healthKitManager.getStepCountForDay (date, completion: { (steps) in
+                // print (day, steps)
+                self.stepsArray.insert((timeStamp: date, value: steps!), at: day)
+                print ("+")
+                self.tableView.reloadData()
+            })
+        }*/
     }
     
     

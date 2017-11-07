@@ -64,8 +64,36 @@ class HealthKitManager {
     }
     
     
+    func getStepCountForDay(_ day: Date, completion:@escaping (Double?)->()) {
+        print (NSURL (fileURLWithPath: "\(#file)").lastPathComponent!, "\(#function)")
+        
+        //   Define the sample type
+        let type = HKQuantityType.quantityType(forIdentifier: HKQuantityTypeIdentifier.stepCount)
+        
+        let startDate = cal.startOfDay(for: day)
+        let endDate = cal.date(byAdding: .day, value: 1, to: startDate)
+        
+        //  Set the predicate
+        let predicate = HKQuery.predicateForSamples(withStart: startDate, end: endDate, options: [])
+        
+        let query = HKStatisticsQuery(quantityType: type!, quantitySamplePredicate: predicate, options: .cumulativeSum) { query, results, error in
+            let quantity = results?.sumQuantity()
+            let unit = HKUnit.count()
+            let steps = quantity?.doubleValue(for: unit)
+            
+            if steps != nil {
+                completion(steps)
+            } else {
+                print("getStepCountForDay: results are nil - returning zero steps")
+                completion(0.0)
+            }
+        }
+        healthStore.execute(query)
+    }
     
-    var stepsAverage: Double = 0.0
+    
+    
+    var stepsAverage: Double = 1000000.0
     func getStepsAverage (completion:@escaping (Double?)->()) {
         print (NSURL (fileURLWithPath: "\(#file)").lastPathComponent!, "\(#function)")
         

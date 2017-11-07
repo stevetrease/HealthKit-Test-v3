@@ -83,7 +83,7 @@
                         <constraints>
                             <constraint firstAttribute="trailing" secondItem="nXy-CW-BOT" secondAttribute="trailing" id="6p4-Tf-4oo"/>
                             <constraint firstItem="nXy-CW-BOT" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" id="Jka-49-wCe"/>
-                            <constraint firstAttribute="bottom" secondItem="nXy-CW-BOT" secondAttribute="bottom" id="MBO-ZC-DGA"/>
+                            <constraint firstItem="wfy-db-euE" firstAttribute="top" secondItem="nXy-CW-BOT" secondAttribute="bottom" id="MBO-ZC-DGA"/>
                             <constraint firstItem="nXy-CW-BOT" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" id="VSY-m3-mK4"/>
                         </constraints>
                         <connections>
