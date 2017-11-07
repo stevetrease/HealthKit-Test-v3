@@ -95,6 +95,12 @@ class ActivityViewController: UIViewController, UITableViewDelegate, UITableView
                     let number2 = numberFormatter.string(from: healthKitManager.historyDays as NSNumber)!
                     
                     self.averageStepsLabel.text = "\(number) \(number2) day average"
+                    
+                    if (healthKitManager.stepsToday > healthKitManager.stepsAverage) {
+                        self.todayStepsLabel.textColor = UIColor(red: 0, green: 0.4, blue: 0, alpha: 1.0)
+                    } else {
+                        self.todayStepsLabel.textColor = .black
+                    }
                 }
             })
             
