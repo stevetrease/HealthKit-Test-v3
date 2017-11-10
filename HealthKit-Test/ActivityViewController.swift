@@ -27,6 +27,10 @@ class ActivityViewController: UIViewController, UITableViewDelegate, UITableView
         
         getTopData()
         getData()
+        
+        
+        
+        
     }
     
     
