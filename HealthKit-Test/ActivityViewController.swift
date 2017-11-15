@@ -32,7 +32,6 @@ class ActivityViewController: UIViewController, UITableViewDelegate, UITableView
         todayStepsLabel.text = " "
         averageStepsLabel.text = " "
         
-        getTopData()
         getData()
     }
     
@@ -88,7 +87,8 @@ class ActivityViewController: UIViewController, UITableViewDelegate, UITableView
     
     
     
-    func getTopData () {
+    // refresh workoutData and then update the tableView
+    @objc func getData () {
         healthKitManager.getTodayStepCount (completion: { (steps) in
             healthKitManager.getStepsAverage (completion: { (steps) in
                 OperationQueue.main.addOperation {
@@ -125,12 +125,7 @@ class ActivityViewController: UIViewController, UITableViewDelegate, UITableView
                 }
             }
         })
-    }
-    
-    
-    
-    // refresh workoutData and then update the tableView
-    @objc func getData () {
+        
         healthKitManager.getDailySteps(completion: { () in
             DispatchQueue.main.async(execute: {
                 print ("getData callback")
@@ -157,14 +152,5 @@ class ActivityViewController: UIViewController, UITableViewDelegate, UITableView
                 self.tableView.reloadData()
             })
         }*/
-    }
-    
-    
-    
-    // screen tap to refresh workoutData
-    @IBAction func screenTappedTriggered(sender: AnyObject) {
-        print (NSURL (fileURLWithPath: "\(#file)").lastPathComponent!, "\(#function)")
-        getTopData()
-        getData()
     }
 }
