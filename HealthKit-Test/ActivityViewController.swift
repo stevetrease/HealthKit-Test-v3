@@ -15,6 +15,7 @@ class ActivityViewController: UIViewController, UITableViewDelegate, UITableView
     
     let healthStore = HKHealthStore()
     let cal = Calendar.current
+    private var refresher: UIRefreshControl!
     var stepsArray: [(timeStamp: Date, value: Double)] = []
        
     
@@ -22,15 +23,17 @@ class ActivityViewController: UIViewController, UITableViewDelegate, UITableView
         super.viewDidLoad()
         print (NSURL (fileURLWithPath: "\(#file)").lastPathComponent!, "\(#function)")
         
+        // setup pull to refresh
+        refresher = UIRefreshControl()
+        tableView.addSubview(refresher)
+        refresher.attributedTitle = NSAttributedString (string: "Pull to refresh")
+        refresher.addTarget(self, action: #selector(getData), for: .valueChanged)
+        
         todayStepsLabel.text = " "
         averageStepsLabel.text = " "
         
         getTopData()
         getData()
-        
-        
-        
-        
     }
     
     
@@ -127,10 +130,11 @@ class ActivityViewController: UIViewController, UITableViewDelegate, UITableView
     
     
     // refresh workoutData and then update the tableView
-    func getData () {
+    @objc func getData () {
         healthKitManager.getDailySteps(completion: { () in
             DispatchQueue.main.async(execute: {
                 print ("getData callback")
+                self.refresher.endRefreshing()
                 self.tableView.reloadData()
                 
                 // determine date of most steps
