@@ -76,6 +76,12 @@ class ActivityViewController: UIViewController, UITableViewDelegate, UITableView
         let stepString = stepFormatter.string (from: steps as NSNumber)!
         cell.detailTextLabel?.text = stepString
         
+        if steps > healthKitManager.stepsAverage {
+            cell.detailTextLabel?.textColor = UIColor(red: 0, green: 0.5, blue: 0, alpha: 1.0)
+        } else {
+            cell.detailTextLabel?.textColor = .black
+        }
+        
         if cal.isDateInWeekend (date) {
             cell.backgroundColor = UIColor (white: 0.95, alpha: 1.0)
         } else {
@@ -104,7 +110,7 @@ class ActivityViewController: UIViewController, UITableViewDelegate, UITableView
                     self.averageStepsLabel.text = "\(number) \(number2) day average"
                     
                     if (healthKitManager.stepsToday > healthKitManager.stepsAverage) {
-                        self.todayStepsLabel.textColor = UIColor(red: 0, green: 0.4, blue: 0, alpha: 1.0)
+                        self.todayStepsLabel.textColor = UIColor(red: 0, green: 0.5, blue: 0, alpha: 1.0)
                     } else {
                         self.todayStepsLabel.textColor = .black
                     }
@@ -119,7 +125,7 @@ class ActivityViewController: UIViewController, UITableViewDelegate, UITableView
                 self.todayStepsLabel.text = "\(number) today"
                 
                 if (healthKitManager.stepsToday > healthKitManager.stepsAverage) {
-                    self.todayStepsLabel.textColor = UIColor(red: 0, green: 0.4, blue: 0, alpha: 1.0)
+                    self.todayStepsLabel.textColor = UIColor(red: 0, green: 0.5, blue: 0, alpha: 1.0)
                 } else {
                     self.todayStepsLabel.textColor = .black
                 }
