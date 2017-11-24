@@ -18,6 +18,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Override point for customization after application launch.
         print (NSURL (fileURLWithPath: "\(#file)").lastPathComponent!, "\(#function)")
         
+        print ("device uuid ", (UIDevice.current.identifierForVendor?.uuidString)!)
+        
+        let appName: String = (Bundle.main.infoDictionary?["CFBundleName"] as? String)!
+        let versionNumber: String = (Bundle.main.infoDictionary?["CFBundleVersion"] as? String)!
+        print ("\(appName)  (\(versionNumber))")
+
         return true
     }
 
