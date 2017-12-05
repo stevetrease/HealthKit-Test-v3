@@ -64,6 +64,37 @@ class HealthKitManager {
     }
     
     
+    
+    var stepsYesterday: Double = 0.0
+    func getYesterdayStepCount(completion:@escaping (Double?)->()) {
+        print (NSURL (fileURLWithPath: "\(#file)").lastPathComponent!, "\(#function)")
+        
+        //   Define the sample type
+        let type = HKQuantityType.quantityType(forIdentifier: HKQuantityTypeIdentifier.stepCount)
+        
+        let endDate = cal.startOfDay(for: Date())
+        let startDate =  cal.date(byAdding: .day, value: -1, to: endDate)
+
+        //  Set the predicate
+        let predicate = HKQuery.predicateForSamples(withStart: startDate, end: endDate, options: [])
+        
+        let query = HKStatisticsQuery(quantityType: type!, quantitySamplePredicate: predicate, options: .cumulativeSum) { query, results, error in
+            let quantity = results?.sumQuantity()
+            let unit = HKUnit.count()
+            let steps = quantity?.doubleValue(for: unit)
+            
+            if steps != nil {
+                self.stepsYesterday = steps!
+                completion(steps)
+            } else {
+                self.stepsYesterday = 0.0
+                completion(0.0)
+            }
+        }
+        healthStore.execute(query)
+    }
+    
+    
     func getStepCountForDay(_ day: Date, completion:@escaping (Double?)->()) {
         print (NSURL (fileURLWithPath: "\(#file)").lastPathComponent!, "\(#function)")
         

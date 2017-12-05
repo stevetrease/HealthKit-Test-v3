@@ -11,6 +11,7 @@ class ActivityViewController: UIViewController, UITableViewDelegate, UITableView
     
     @IBOutlet var tableView: UITableView!
     @IBOutlet var todayStepsLabel: UILabel!
+    @IBOutlet var yesterdayStepsLabel: UILabel!
     @IBOutlet var averageStepsLabel: UILabel!
     
     let healthStore = HKHealthStore()
@@ -30,6 +31,7 @@ class ActivityViewController: UIViewController, UITableViewDelegate, UITableView
         refresher.addTarget(self, action: #selector(getData), for: .valueChanged)
         
         todayStepsLabel.text = " "
+        yesterdayStepsLabel.text = " "
         averageStepsLabel.text = " "
         
         getData()
@@ -104,6 +106,23 @@ class ActivityViewController: UIViewController, UITableViewDelegate, UITableView
     
     
     @objc func getData () {
+        // get yesterday's steps
+        healthKitManager.getYesterdayStepCount (completion: { (steps) in
+            OperationQueue.main.addOperation {
+                let numberFormatter = NumberFormatter()
+                numberFormatter.maximumFractionDigits = 0
+                numberFormatter.numberStyle = NumberFormatter.Style.decimal
+                let number = numberFormatter.string(from: healthKitManager.stepsYesterday as NSNumber)!
+                self.yesterdayStepsLabel.text = "\(number) yesterday"
+                
+                if (healthKitManager.stepsYesterday > healthKitManager.stepsAverage) {
+                    self.yesterdayStepsLabel.textColor = UIColor(red: 0, green: 0.5, blue: 0, alpha: 1.0)
+                } else {
+                    self.yesterdayStepsLabel.textColor = .black
+                }
+            }
+        })
+        
         healthKitManager.getTodayStepCount (completion: { (steps) in
             healthKitManager.getStepsAverage (completion: { (steps) in
                 OperationQueue.main.addOperation {
@@ -116,12 +135,18 @@ class ActivityViewController: UIViewController, UITableViewDelegate, UITableView
                     numberFormatter.numberStyle = NumberFormatter.Style.spellOut
                     let number2 = numberFormatter.string(from: healthKitManager.historyDays as NSNumber)!
                     
-                    self.averageStepsLabel.text = "\(number) \(number2) day average"
+                    self.averageStepsLabel.text = "\(number) \(number2)-day average"
                     
                     if (healthKitManager.stepsToday > healthKitManager.stepsAverage) {
                         self.todayStepsLabel.textColor = UIColor(red: 0, green: 0.5, blue: 0, alpha: 1.0)
                     } else {
                         self.todayStepsLabel.textColor = .black
+                    }
+                    
+                    if (healthKitManager.stepsYesterday > healthKitManager.stepsAverage) {
+                        self.yesterdayStepsLabel.textColor = UIColor(red: 0, green: 0.5, blue: 0, alpha: 1.0)
+                    } else {
+                        self.yesterdayStepsLabel.textColor = .black
                     }
                 }
             })
@@ -141,6 +166,7 @@ class ActivityViewController: UIViewController, UITableViewDelegate, UITableView
             }
         })
         
+        // get historical days steps
         healthKitManager.getDailySteps(completion: { () in
             DispatchQueue.main.async(execute: {
                 print ("getData callback")
