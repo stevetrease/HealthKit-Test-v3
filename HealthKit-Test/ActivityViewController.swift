@@ -44,7 +44,6 @@ class ActivityViewController: UIViewController, UITableViewDelegate, UITableView
  
     
     
-    // one row in each section for each workout in that day in the workoutData
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // return stepsArray.count
         print (healthKitManager.dailyStepsArray.count)
@@ -53,14 +52,16 @@ class ActivityViewController: UIViewController, UITableViewDelegate, UITableView
     
     
     
-    // nicely formatted custom TableViewCell for each workoutData item
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         if (indexPath.row == 0) {
             // initial cell
-            let cell = tableView.dequeueReusableCell(withIdentifier: "defaultCell")!
-            cell.textLabel?.text = "zero cell"
-            cell.detailTextLabel?.text = "zero cell"
+            let cell = tableView.dequeueReusableCell(withIdentifier: "zeroCell")! as! ZeroCellTableViewCell
+            
+            cell.item1Label?.text = "zero cell"
+            cell.item2Label?.text = "zero cell"
+            cell.item3Label?.text = "zero cell"
+            
             return cell
         } else {
             let cell = tableView.dequeueReusableCell(withIdentifier: "defaultCell")!
@@ -102,7 +103,6 @@ class ActivityViewController: UIViewController, UITableViewDelegate, UITableView
     
     
     
-    // refresh workoutData and then update the tableView
     @objc func getData () {
         healthKitManager.getTodayStepCount (completion: { (steps) in
             healthKitManager.getStepsAverage (completion: { (steps) in
@@ -146,26 +146,7 @@ class ActivityViewController: UIViewController, UITableViewDelegate, UITableView
                 print ("getData callback")
                 self.refresher.endRefreshing()
                 self.tableView.reloadData()
-                
-                // determine date of most steps
-                /* var max = healthKitManager.dailyStepsArray[0]
-                for element in healthKitManager.dailyStepsArray {
-                    if element.value > max.value {
-                        max = element
-                    }
-                }
-                print ("maximum steps of \(max.value) on \(max.timeStamp)") */
             })
         })
-        /*
-        for day in 1...28 {
-            let date = cal.date(byAdding: .day, value: -day, to: Date())!
-            healthKitManager.getStepCountForDay (date, completion: { (steps) in
-                // print (day, steps)
-                self.stepsArray.insert((timeStamp: date, value: steps!), at: day)
-                print ("+")
-                self.tableView.reloadData()
-            })
-        }*/
     }
 }
