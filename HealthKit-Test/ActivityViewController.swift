@@ -47,6 +47,7 @@ class ActivityViewController: UIViewController, UITableViewDelegate, UITableView
     // one row in each section for each workout in that day in the workoutData
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // return stepsArray.count
+        print (healthKitManager.dailyStepsArray.count)
         return healthKitManager.dailyStepsArray.count + 1
     }
     
@@ -64,7 +65,7 @@ class ActivityViewController: UIViewController, UITableViewDelegate, UITableView
         } else {
             let cell = tableView.dequeueReusableCell(withIdentifier: "defaultCell")!
             
-            let date = healthKitManager.dailyStepsArray[indexPath.row + 1].timeStamp
+            let date = healthKitManager.dailyStepsArray[indexPath.row - 1].timeStamp
             
             if (cal.isDateInToday(date)) {
                 cell.textLabel?.text = "Today"
@@ -75,7 +76,7 @@ class ActivityViewController: UIViewController, UITableViewDelegate, UITableView
                 cell.textLabel?.text = dateString
             }
             
-            let steps = healthKitManager.dailyStepsArray[indexPath.row + 1].value
+            let steps = healthKitManager.dailyStepsArray[indexPath.row - 1].value
             // let steps = stepsArray[indexPath.row].value
             let stepFormatter = NumberFormatter()
             stepFormatter.maximumFractionDigits = 0
