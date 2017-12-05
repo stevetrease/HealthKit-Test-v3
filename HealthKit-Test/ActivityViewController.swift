@@ -47,48 +47,56 @@ class ActivityViewController: UIViewController, UITableViewDelegate, UITableView
     // one row in each section for each workout in that day in the workoutData
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // return stepsArray.count
-        return healthKitManager.dailyStepsArray.count
+        return healthKitManager.dailyStepsArray.count + 1
     }
     
     
     
     // nicely formatted custom TableViewCell for each workoutData item
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "defaultCell")!
         
-        let date = healthKitManager.dailyStepsArray[indexPath.row].timeStamp
-        // let date = stepsArray[indexPath.row].timeStamp
-        
-        if (cal.isDateInToday(date)) {
-            cell.textLabel?.text = "Today"
+        if (indexPath.row == 0) {
+            // initial cell
+            let cell = tableView.dequeueReusableCell(withIdentifier: "defaultCell")!
+            cell.textLabel?.text = "zero cell"
+            cell.detailTextLabel?.text = "zero cell"
+            return cell
         } else {
-            let formatter = DateFormatter()
-            formatter.dateStyle = .medium
-            let dateString = formatter.string (from: date)
-            cell.textLabel?.text = dateString
+            let cell = tableView.dequeueReusableCell(withIdentifier: "defaultCell")!
+            
+            let date = healthKitManager.dailyStepsArray[indexPath.row + 1].timeStamp
+            
+            if (cal.isDateInToday(date)) {
+                cell.textLabel?.text = "Today"
+            } else {
+                let formatter = DateFormatter()
+                formatter.dateStyle = .medium
+                let dateString = formatter.string (from: date)
+                cell.textLabel?.text = dateString
+            }
+            
+            let steps = healthKitManager.dailyStepsArray[indexPath.row + 1].value
+            // let steps = stepsArray[indexPath.row].value
+            let stepFormatter = NumberFormatter()
+            stepFormatter.maximumFractionDigits = 0
+            stepFormatter.numberStyle = NumberFormatter.Style.decimal
+            let stepString = stepFormatter.string (from: steps as NSNumber)!
+            cell.detailTextLabel?.text = stepString
+            
+            if steps > healthKitManager.stepsAverage {
+                cell.detailTextLabel?.textColor = UIColor(red: 0, green: 0.5, blue: 0, alpha: 1.0)
+            } else {
+                cell.detailTextLabel?.textColor = .black
+            }
+            
+            if cal.isDateInWeekend (date) {
+                cell.backgroundColor = UIColor (white: 0.95, alpha: 1.0)
+            } else {
+                cell.backgroundColor = .clear
+            }
+            
+            return cell
         }
-        
-        let steps = healthKitManager.dailyStepsArray[indexPath.row].value
-        // let steps = stepsArray[indexPath.row].value
-        let stepFormatter = NumberFormatter()
-        stepFormatter.maximumFractionDigits = 0
-        stepFormatter.numberStyle = NumberFormatter.Style.decimal
-        let stepString = stepFormatter.string (from: steps as NSNumber)!
-        cell.detailTextLabel?.text = stepString
-        
-        if steps > healthKitManager.stepsAverage {
-            cell.detailTextLabel?.textColor = UIColor(red: 0, green: 0.5, blue: 0, alpha: 1.0)
-        } else {
-            cell.detailTextLabel?.textColor = .black
-        }
-        
-        if cal.isDateInWeekend (date) {
-            cell.backgroundColor = UIColor (white: 0.95, alpha: 1.0)
-        } else {
-            cell.backgroundColor = .clear
-        }
-        
-        return cell
     }
     
     
