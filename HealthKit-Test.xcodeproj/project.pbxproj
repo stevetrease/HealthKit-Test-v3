@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2C73DF37632959C6A262009A /* Pods_HealthKit_Test.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ADC1C87028A525DF2C7A0344 /* Pods_HealthKit_Test.framework */; };
 		AA0E14981EFFDA3A005EF648 /* HealthKitManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA0E14971EFFDA3A005EF648 /* HealthKitManager.swift */; };
 		AA89F2761FD7203900EF2A7E /* ZeroCellTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA89F2751FD7203900EF2A7E /* ZeroCellTableViewCell.swift */; };
 		AA8C0F431EFE6625005864BE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA8C0F421EFE6625005864BE /* AppDelegate.swift */; };
@@ -29,6 +30,9 @@
 		AA8C0F4E1EFE6625005864BE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		AA8C0F541EFE66A5005864BE /* HealthKit-Test.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "HealthKit-Test.entitlements"; sourceTree = "<group>"; };
 		AA8C0F561EFE66A5005864BE /* HealthKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HealthKit.framework; path = System/Library/Frameworks/HealthKit.framework; sourceTree = SDKROOT; };
+		ADC1C87028A525DF2C7A0344 /* Pods_HealthKit_Test.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_HealthKit_Test.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		B3FEF9810478BB49DED6CF9A /* Pods-HealthKit-Test.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HealthKit-Test.release.xcconfig"; path = "Pods/Target Support Files/Pods-HealthKit-Test/Pods-HealthKit-Test.release.xcconfig"; sourceTree = "<group>"; };
+		EEB77682E5E2B4FD16B0742D /* Pods-HealthKit-Test.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-HealthKit-Test.debug.xcconfig"; path = "Pods/Target Support Files/Pods-HealthKit-Test/Pods-HealthKit-Test.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -37,6 +41,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				AA8C0F571EFE66A5005864BE /* HealthKit.framework in Frameworks */,
+				2C73DF37632959C6A262009A /* Pods_HealthKit_Test.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -49,6 +54,7 @@
 				AA8C0F411EFE6625005864BE /* HealthKit-Test */,
 				AA8C0F401EFE6625005864BE /* Products */,
 				AA8C0F551EFE66A5005864BE /* Frameworks */,
+				DCA3B7B6F2013107C05ECBFA /* Pods */,
 			);
 			sourceTree = "<group>";
 		};
@@ -80,8 +86,18 @@
 			isa = PBXGroup;
 			children = (
 				AA8C0F561EFE66A5005864BE /* HealthKit.framework */,
+				ADC1C87028A525DF2C7A0344 /* Pods_HealthKit_Test.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		DCA3B7B6F2013107C05ECBFA /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				EEB77682E5E2B4FD16B0742D /* Pods-HealthKit-Test.debug.xcconfig */,
+				B3FEF9810478BB49DED6CF9A /* Pods-HealthKit-Test.release.xcconfig */,
+			);
+			name = Pods;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -91,11 +107,14 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = AA8C0F511EFE6625005864BE /* Build configuration list for PBXNativeTarget "HealthKit-Test" */;
 			buildPhases = (
+				4693EA7E4BEDAF15631A357B /* [CP] Check Pods Manifest.lock */,
 				AA8C0F3B1EFE6625005864BE /* Sources */,
 				AA8C0F3C1EFE6625005864BE /* Frameworks */,
 				AAAFC2F41F05700600AB1F48 /* ShellScript */,
 				AA8C0F3D1EFE6625005864BE /* Resources */,
 				AAAFC2F51F05701100AB1F48 /* ShellScript */,
+				AF62CDED47B9881834F0ADC8 /* [CP] Embed Pods Frameworks */,
+				E676F229F085984CBB79F225 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -158,6 +177,21 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		4693EA7E4BEDAF15631A357B /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
 		AAAFC2F41F05700600AB1F48 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -183,6 +217,36 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = ./updateBuildVersionNumber.sh;
+		};
+		AF62CDED47B9881834F0ADC8 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-HealthKit-Test/Pods-HealthKit-Test-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		E676F229F085984CBB79F225 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "[CP] Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-HealthKit-Test/Pods-HealthKit-Test-resources.sh\"\n";
+			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -329,6 +393,7 @@
 		};
 		AA8C0F521EFE6625005864BE /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = EEB77682E5E2B4FD16B0742D /* Pods-HealthKit-Test.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "HealthKit-Test/HealthKit-Test.entitlements";
@@ -344,6 +409,7 @@
 		};
 		AA8C0F531EFE6625005864BE /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = B3FEF9810478BB49DED6CF9A /* Pods-HealthKit-Test.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "HealthKit-Test/HealthKit-Test.entitlements";
