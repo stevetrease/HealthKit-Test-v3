@@ -34,6 +34,10 @@ class ActivityViewController: UIViewController, UITableViewDelegate, UITableView
         yesterdayStepsLabel.text = " "
         averageStepsLabel.text = " "
         
+        yesterdayStepsLabel.isUserInteractionEnabled = true
+        let gestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(ActivityViewController.copyStepsPressed))
+        yesterdayStepsLabel.addGestureRecognizer(gestureRecognizer)
+        
         getData()
     }
     
@@ -174,5 +178,12 @@ class ActivityViewController: UIViewController, UITableViewDelegate, UITableView
                 self.tableView.reloadData()
             })
         })
+    }
+    
+    
+    
+    @objc func copyStepsPressed () {
+        print (NSURL (fileURLWithPath: "\(#file)").lastPathComponent!, "\(#function)")
+        UIPasteboard.general.string = String(Int(healthKitManager.stepsYesterday))
     }
 }
