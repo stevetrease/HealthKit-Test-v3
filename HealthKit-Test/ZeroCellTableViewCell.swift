@@ -7,12 +7,11 @@
 //
 
 import UIKit
+import Charts
 
 class ZeroCellTableViewCell: UITableViewCell {
     
-    @IBOutlet weak var item1Label: UILabel!
-    @IBOutlet weak var item2Label: UILabel!
-    @IBOutlet weak var item3Label: UILabel!
+    @IBOutlet weak var barChartView: BarChartView!
     
     override func awakeFromNib() {
         super.awakeFromNib()

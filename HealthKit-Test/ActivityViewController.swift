@@ -5,6 +5,7 @@
 
 import UIKit
 import HealthKit
+import Charts
 
 
 class ActivityViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
@@ -24,16 +25,21 @@ class ActivityViewController: UIViewController, UITableViewDelegate, UITableView
         super.viewDidLoad()
         print (NSURL (fileURLWithPath: "\(#file)").lastPathComponent!, "\(#function)")
         
+        tableView.estimatedRowHeight = 400
+        tableView.rowHeight = UITableViewAutomaticDimension
+        
         // setup pull to refresh
         refresher = UIRefreshControl()
         tableView.addSubview(refresher)
         refresher.attributedTitle = NSAttributedString (string: "Pull to refresh")
         refresher.addTarget(self, action: #selector(getData), for: .valueChanged)
         
+        // zero labels
         todayStepsLabel.text = " "
         yesterdayStepsLabel.text = " "
         averageStepsLabel.text = " "
         
+        // setup click to paste
         yesterdayStepsLabel.isUserInteractionEnabled = true
         let gestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(ActivityViewController.copyStepsPressed))
         yesterdayStepsLabel.addGestureRecognizer(gestureRecognizer)
@@ -64,9 +70,57 @@ class ActivityViewController: UIViewController, UITableViewDelegate, UITableView
             // initial cell
             let cell = tableView.dequeueReusableCell(withIdentifier: "zeroCell")! as! ZeroCellTableViewCell
             
-            cell.item1Label?.text = "zero cell"
-            cell.item2Label?.text = "zero cell"
-            cell.item3Label?.text = "zero cell"
+            cell.barChartView.legend.enabled = false
+            // cell.barChartView.xAxis.drawLabelsEnabled = true
+            // cell.barChartView.xAxis.drawGridLinesEnabled = false
+            // cell.barChartView.leftAxis.axisMinimum = 0
+            // cell.barChartView.leftAxis.drawGridLinesEnabled = false
+            // cell.barChartView.leftAxis.drawLabelsEnabled = true
+            // cell.barChartView.chartDescription?.text = ""
+            // cell.barChartView.drawBordersEnabled = false
+            // cell.barChartView.leftAxis.drawAxisLineEnabled = false
+            // cell.barChartView.animate(xAxisDuration: 0.5, yAxisDuration: 1.0, easingOptionX: .easeInExpo, easingOptionY: .easeInExpo)
+            
+            var dailyStepDataEntries: [BarChartDataEntry] = []
+            var xLabels: [String] = []
+            
+            if healthKitManager.dailyStepsArray.count > 0 {
+                for day in 1...healthKitManager.historyDays {
+                    let timeStamp = healthKitManager.dailyStepsArray[day].timeStamp
+                    let value = healthKitManager.dailyStepsArray[day].value
+                    print ("\(day)", "\(timeStamp)", "\(value)")
+                    
+                    let dailyStepEntry = BarChartDataEntry(x: Double(day), y: value)
+                    dailyStepDataEntries.append(dailyStepEntry)
+
+                    let formatter = DateFormatter()
+                    formatter.dateFormat = "E"
+                    xLabels.append (formatter.string (from: timeStamp))
+                }
+                
+                let barDataSet = BarChartDataSet(values: dailyStepDataEntries, label: "")
+                barDataSet.colors = [UIColor.lightGray]
+                let barData = BarChartData(dataSets: [barDataSet])
+                cell.barChartView.data = barData
+
+                /*
+                cell.barChartView.xAxis.valueFormatter = DefaultAxisValueFormatter(block: {(value, _) in
+                    let index = Int(value) + healthKitManager.historyDays
+                    if (value == 0) {
+                        return "Today"
+                    } else {
+                        return (xLabels[index])
+                    }
+                })
+                */
+                // cell.barChartView.xAxis.axisMinimum = -(Double(healthKitManager.historyDays) + 0.5)
+                // cell.barChartView.xAxis.axisMaximum = 0.5
+                
+                cell.barChartView.data?.notifyDataChanged()
+                cell.barChartView.notifyDataSetChanged()
+            } else {
+                print ("no data for bar chart")
+            }
             
             return cell
         } else {
