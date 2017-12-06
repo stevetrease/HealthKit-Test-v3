@@ -80,7 +80,7 @@
                                                             <rect key="frame" x="5" y="5" width="365" height="189.66666666666666"/>
                                                             <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                             <constraints>
-                                                                <constraint firstAttribute="height" priority="999" constant="200" id="LCO-JS-VJ7"/>
+                                                                <constraint firstAttribute="height" priority="999" constant="150" id="LCO-JS-VJ7"/>
                                                             </constraints>
                                                         </view>
                                                     </subviews>

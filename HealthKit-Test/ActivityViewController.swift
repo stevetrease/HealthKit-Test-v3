@@ -71,26 +71,33 @@ class ActivityViewController: UIViewController, UITableViewDelegate, UITableView
             let cell = tableView.dequeueReusableCell(withIdentifier: "zeroCell")! as! ZeroCellTableViewCell
             
             cell.barChartView.legend.enabled = false
-            // cell.barChartView.xAxis.drawLabelsEnabled = true
-            // cell.barChartView.xAxis.drawGridLinesEnabled = false
-            // cell.barChartView.leftAxis.axisMinimum = 0
-            // cell.barChartView.leftAxis.drawGridLinesEnabled = false
-            // cell.barChartView.leftAxis.drawLabelsEnabled = true
-            // cell.barChartView.chartDescription?.text = ""
-            // cell.barChartView.drawBordersEnabled = false
-            // cell.barChartView.leftAxis.drawAxisLineEnabled = false
-            // cell.barChartView.animate(xAxisDuration: 0.5, yAxisDuration: 1.0, easingOptionX: .easeInExpo, easingOptionY: .easeInExpo)
+            
+            cell.barChartView.xAxis.drawLabelsEnabled = true
+            cell.barChartView.xAxis.drawGridLinesEnabled = false
+            cell.barChartView.xAxis.labelPosition = XAxis.LabelPosition.bottom
+            
+            cell.barChartView.leftAxis.axisMinimum = 0
+            cell.barChartView.leftAxis.drawGridLinesEnabled = false
+            cell.barChartView.leftAxis.drawLabelsEnabled = false
+            cell.barChartView.leftAxis.drawAxisLineEnabled = false
+            
+            cell.barChartView.rightAxis.drawLabelsEnabled = false
+            cell.barChartView.rightAxis.drawAxisLineEnabled = false
+            
+            cell.barChartView.chartDescription?.text = ""
+            cell.barChartView.drawBordersEnabled = false
+
             
             var dailyStepDataEntries: [BarChartDataEntry] = []
             var xLabels: [String] = []
             
             if healthKitManager.dailyStepsArray.count > 0 {
-                for day in 1...healthKitManager.historyDays {
+                for day in 0..<healthKitManager.historyDays {
                     let timeStamp = healthKitManager.dailyStepsArray[day].timeStamp
                     let value = healthKitManager.dailyStepsArray[day].value
                     print ("\(day)", "\(timeStamp)", "\(value)")
                     
-                    let dailyStepEntry = BarChartDataEntry(x: Double(day), y: value)
+                    let dailyStepEntry = BarChartDataEntry(x: Double(healthKitManager.historyDays - day), y: value)
                     dailyStepDataEntries.append(dailyStepEntry)
 
                     let formatter = DateFormatter()
@@ -103,18 +110,10 @@ class ActivityViewController: UIViewController, UITableViewDelegate, UITableView
                 let barData = BarChartData(dataSets: [barDataSet])
                 cell.barChartView.data = barData
 
-                /*
                 cell.barChartView.xAxis.valueFormatter = DefaultAxisValueFormatter(block: {(value, _) in
-                    let index = Int(value) + healthKitManager.historyDays
-                    if (value == 0) {
-                        return "Today"
-                    } else {
-                        return (xLabels[index])
-                    }
+                    let index = healthKitManager.historyDays - Int(value)
+                    return (xLabels[index])
                 })
-                */
-                // cell.barChartView.xAxis.axisMinimum = -(Double(healthKitManager.historyDays) + 0.5)
-                // cell.barChartView.xAxis.axisMaximum = 0.5
                 
                 cell.barChartView.data?.notifyDataChanged()
                 cell.barChartView.notifyDataSetChanged()
