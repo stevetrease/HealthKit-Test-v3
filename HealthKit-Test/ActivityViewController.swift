@@ -86,7 +86,6 @@ class ActivityViewController: UIViewController, UITableViewDelegate, UITableView
             
             cell.barChartView.chartDescription?.text = ""
             cell.barChartView.drawBordersEnabled = false
-
             
             var dailyStepDataEntries: [BarChartDataEntry] = []
             var xLabels: [String] = []
@@ -95,7 +94,7 @@ class ActivityViewController: UIViewController, UITableViewDelegate, UITableView
                 for day in 0..<healthKitManager.historyDays {
                     let timeStamp = healthKitManager.dailyStepsArray[day].timeStamp
                     let value = healthKitManager.dailyStepsArray[day].value
-                    print ("\(day)", "\(timeStamp)", "\(value)")
+                    // print ("\(day)", "\(timeStamp)", "\(value)")
                     
                     let dailyStepEntry = BarChartDataEntry(x: Double(healthKitManager.historyDays - day), y: value)
                     dailyStepDataEntries.append(dailyStepEntry)
