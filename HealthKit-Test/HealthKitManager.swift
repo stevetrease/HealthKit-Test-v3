@@ -155,7 +155,12 @@ class HealthKitManager {
     }
     
     
+    
+    func getHourlySteps (completion:@escaping ()->()) {
+    }
 
+    
+    
     func getDailySteps (completion:@escaping ()->()) {
         print (NSURL (fileURLWithPath: "\(#file)").lastPathComponent!, "\(#function)")
         

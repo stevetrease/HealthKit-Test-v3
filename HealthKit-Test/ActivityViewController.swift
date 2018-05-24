@@ -227,7 +227,16 @@ class ActivityViewController: UIViewController, UITableViewDelegate, UITableView
         // get historical days steps
         healthKitManager.getDailySteps(completion: { () in
             DispatchQueue.main.async(execute: {
-                print ("getData callback")
+                print ("getData getDailySteps callback")
+                self.refresher.endRefreshing()
+                self.tableView.reloadData()
+            })
+        })
+        
+        // get hourly steps steps
+        healthKitManager.getHourlySteps(completion: { () in
+            DispatchQueue.main.async(execute: {
+                print ("getData getHourlySteps callback")
                 self.refresher.endRefreshing()
                 self.tableView.reloadData()
             })
