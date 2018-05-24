@@ -7,6 +7,8 @@ import UIKit
 import HealthKit
 import Charts
 
+let numberOfZeroCells = 2
+
 
 class ActivityViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
@@ -59,14 +61,14 @@ class ActivityViewController: UIViewController, UITableViewDelegate, UITableView
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // return stepsArray.count
         print (healthKitManager.dailyStepsArray.count)
-        return healthKitManager.dailyStepsArray.count + 1
+        return healthKitManager.dailyStepsArray.count + numberOfZeroCells
     }
     
     
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        if (indexPath.row == 0) {
+        if (indexPath.row == 0 || indexPath.row == 1) {
             // initial cell
             let cell = tableView.dequeueReusableCell(withIdentifier: "zeroCell")! as! ZeroCellTableViewCell
             
@@ -124,7 +126,7 @@ class ActivityViewController: UIViewController, UITableViewDelegate, UITableView
         } else {
             let cell = tableView.dequeueReusableCell(withIdentifier: "defaultCell")!
             
-            let date = healthKitManager.dailyStepsArray[indexPath.row - 1].timeStamp
+            let date = healthKitManager.dailyStepsArray[indexPath.row - numberOfZeroCells].timeStamp
             
             if (cal.isDateInToday(date)) {
                 cell.textLabel?.text = "Today"
