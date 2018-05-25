@@ -27,7 +27,7 @@ class ActivityViewController: UIViewController, UITableViewDelegate, UITableView
         super.viewDidLoad()
         print (NSURL (fileURLWithPath: "\(#file)").lastPathComponent!, "\(#function)")
         
-        tableView.estimatedRowHeight = 400
+        tableView.estimatedRowHeight = 75
         tableView.rowHeight = UITableViewAutomaticDimension
         
         // setup pull to refresh
@@ -192,7 +192,7 @@ class ActivityViewController: UIViewController, UITableViewDelegate, UITableView
                 cell.textLabel?.text = dateString
             }
             
-            let steps = healthKitManager.dailyStepsArray[indexPath.row - 1].value
+            let steps = healthKitManager.dailyStepsArray[indexPath.row - numberOfZeroCells].value
             // let steps = stepsArray[indexPath.row].value
             let stepFormatter = NumberFormatter()
             stepFormatter.maximumFractionDigits = 0
